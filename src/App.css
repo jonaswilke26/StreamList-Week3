@@ -135,6 +135,101 @@ body {
   background-color: #918aff;
 }
 
+/* StreamList items */
+
+.stream-list {
+  margin-top: 40px;
+  text-align: left;
+}
+
+.list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.list-heading h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.item-count {
+  color: #9c96ff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.empty-message {
+  background-color: #181b24;
+  border: 1px solid #2a2d38;
+  border-radius: 10px;
+  padding: 25px;
+  color: #8b8f9c;
+  text-align: center;
+}
+
+.stream-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  background-color: #181b24;
+  border: 1px solid #2a2d38;
+  border-radius: 10px;
+  padding: 15px 18px;
+  margin-bottom: 12px;
+}
+
+.item-title {
+  font-size: 17px;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.item-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.complete-button {
+  background-color: #243b2e;
+  color: #70d99b;
+}
+
+.edit-button {
+  background-color: #29284b;
+  color: #a59fff;
+}
+
+.delete-button {
+  background-color: #472629;
+  color: #ff8b91;
+}
+
+.item-actions button:hover {
+  opacity: 0.8;
+}
+
+.stream-item.completed .item-title {
+  text-decoration: line-through;
+  color: #737784;
+}
+
+.stream-item.completed {
+  opacity: 0.7;
+}
+
 /* Placeholder pages */
 
 .page-card {

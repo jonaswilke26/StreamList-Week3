@@ -1,14 +1,22 @@
-import { useState } from "react";
-import {
-  FaCheck,
-  FaPen,
-  FaTrash,
-} from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 function StreamList() {
   const [title, setTitle] = useState("");
-  const [items, setItems] = useState([]);
+
+  const [items, setItems] = useState(() => {
+    const savedItems = localStorage.getItem("streamListItems");
+
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
+
   const [editingId, setEditingId] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "streamListItems",
+      JSON.stringify(items)
+    );
+  }, [items]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -40,6 +48,15 @@ function StreamList() {
     setTitle("");
   };
 
+  const handleDelete = (id) => {
+    setItems(items.filter((item) => item.id !== id));
+  };
+
+  const handleEdit = (item) => {
+    setTitle(item.title);
+    setEditingId(item.id);
+  };
+
   const handleComplete = (id) => {
     setItems(
       items.map((item) =>
@@ -53,33 +70,15 @@ function StreamList() {
     );
   };
 
-  const handleEdit = (item) => {
-    setTitle(item.title);
-    setEditingId(item.id);
-  };
-
-  const handleDelete = (id) => {
-    setItems(
-      items.filter((item) => item.id !== id)
-    );
-
-    if (editingId === id) {
-      setEditingId(null);
-      setTitle("");
-    }
-  };
-
   return (
     <section className="page">
-      <div className="hero">
-        <p className="eyebrow">
-          YOUR PERSONAL WATCHLIST
-        </p>
+      <div className="page-card">
+        <h1>My StreamList</h1>
 
-        <h1>What do you want to watch?</h1>
-
-        <p className="hero-text">
-          Keep track of movies and shows you want to watch.
+        <p>
+          Add movies and shows that you want to watch.
+          Your list will remain saved even after you
+          refresh the page.
         </p>
 
         <form
@@ -88,7 +87,7 @@ function StreamList() {
         >
           <input
             type="text"
-            placeholder="Enter a movie or TV show..."
+            placeholder="Enter a movie or show..."
             value={title}
             onChange={(event) =>
               setTitle(event.target.value)
@@ -96,79 +95,60 @@ function StreamList() {
           />
 
           <button type="submit">
-            {editingId !== null
-              ? "Update"
-              : "Add to StreamList"}
+            {editingId !== null ? "Update" : "Add"}
           </button>
         </form>
 
         <div className="stream-list">
-          <div className="list-heading">
-            <h2>My StreamList</h2>
-
-            <span className="item-count">
-              {items.length}{" "}
-              {items.length === 1
-                ? "item"
-                : "items"}
-            </span>
-          </div>
-
           {items.length === 0 ? (
-            <p className="empty-message">
+            <p>
               Your StreamList is empty. Add something
-              you want to watch!
+              above to get started.
             </p>
           ) : (
             items.map((item) => (
               <div
-                className={`stream-item ${
-                  item.completed
-                    ? "completed"
-                    : ""
-                }`}
+                className="stream-item"
                 key={item.id}
               >
-                <span className="item-title">
+                <span
+                  style={{
+                    textDecoration: item.completed
+                      ? "line-through"
+                      : "none",
+                  }}
+                >
                   {item.title}
                 </span>
 
-                <div className="item-actions">
+                <div className="stream-actions">
                   <button
-                    className="complete-button"
+                    type="button"
                     onClick={() =>
                       handleComplete(item.id)
                     }
-                    title={
-                      item.completed
-                        ? "Mark incomplete"
-                        : "Mark complete"
-                    }
-                    aria-label="Complete item"
                   >
-                    <FaCheck />
+                    {item.completed
+                      ? "Undo"
+                      : "Complete"}
                   </button>
 
                   <button
-                    className="edit-button"
+                    type="button"
                     onClick={() =>
                       handleEdit(item)
                     }
-                    title="Edit"
-                    aria-label="Edit item"
                   >
-                    <FaPen />
+                    Edit
                   </button>
 
                   <button
-                    className="delete-button"
+                    type="button"
                     onClick={() =>
                       handleDelete(item.id)
                     }
-                    title="Delete"
-                    aria-label="Delete item"
                   >
-                    <FaTrash />
+                    Delete
                   </button>
                 </div>
               </div>

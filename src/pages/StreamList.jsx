@@ -4,9 +4,13 @@ function StreamList() {
   const [title, setTitle] = useState("");
 
   const [items, setItems] = useState(() => {
-    const savedItems = localStorage.getItem("streamListItems");
-
-    return savedItems ? JSON.parse(savedItems) : [];
+    try {
+      const savedItems = localStorage.getItem("streamListItems");
+      return savedItems ? JSON.parse(savedItems) : [];
+    } catch (error) {
+      console.error("Unable to load saved StreamList items:", error);
+      return [];
+    }
   });
 
   const [editingId, setEditingId] = useState(null);
@@ -21,7 +25,9 @@ function StreamList() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (title.trim() === "") {
+    const trimmedTitle = title.trim();
+
+    if (trimmedTitle === "") {
       return;
     }
 
@@ -29,7 +35,7 @@ function StreamList() {
       setItems(
         items.map((item) =>
           item.id === editingId
-            ? { ...item, title: title }
+            ? { ...item, title: trimmedTitle }
             : item
         )
       );
@@ -38,7 +44,7 @@ function StreamList() {
     } else {
       const newItem = {
         id: Date.now(),
-        title: title,
+        title: trimmedTitle,
         completed: false,
       };
 
